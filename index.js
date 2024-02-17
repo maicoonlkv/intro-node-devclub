@@ -29,15 +29,20 @@ app.get('/users', (request, response) => {
 })  //Criação da Rota
 
 app.post('/users', (request, response) => {
-    const {name, age} = request.body
+    try { const {name, age} = request.body
+
+    if (age < 18) throw new Error ("Only allowed users over 18 years old")
 
     //console.log(uuid.v4())
 
     const user = {id:uuid.v4(), name, age}
 
-    users.push(user)
+    users.push(userR)
 
     return response.status(201).json(user)
+} catch(err) {
+    return response.status(400).json({error:err.message})
+}
 })
 
 app.put('/users/:id', checkUserId, (request, response) => {
@@ -65,12 +70,6 @@ app.delete('/users/:id', checkUserId,  (request, response) => {
     return response.status(204).json()
     
 }) 
-
-
-
-
-
-
 
 
 app.listen(3000, () => {
